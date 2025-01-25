@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         thread {
             val dns = InetAddress.getAllByName("hencoder.com")
             Logit.d(TAG, "cfx dns: ${dns[0]}")
+            
         }
     }
 
