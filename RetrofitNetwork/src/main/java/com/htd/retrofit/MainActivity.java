@@ -8,7 +8,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.htd.myapplication.R;
+import com.cfx.myapplication.R;
 import com.htd.retrofit.utils.Logit;
 
 import java.util.List;
