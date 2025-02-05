@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "Android Senior"
 include(":RetrofitNetwork")
 include(":OkHttp")
+include(":ThreadSync")
+include(":Utils")

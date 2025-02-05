@@ -1,4 +1,4 @@
-package com.htd.retrofit.utils
+package com.htd.utils
 
 import java.text.SimpleDateFormat
 import java.util.Calendar

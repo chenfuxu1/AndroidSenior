@@ -44,4 +44,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 
     implementation(libs.okhttp)
+
+    // 添加工具类模块
+    implementation(project(":Utils"))
 }

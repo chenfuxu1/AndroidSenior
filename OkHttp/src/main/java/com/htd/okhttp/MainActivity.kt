@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cfx.okhttp.R
-import com.htd.okhttp.utils.Logit
+import com.htd.utils.Logit
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient

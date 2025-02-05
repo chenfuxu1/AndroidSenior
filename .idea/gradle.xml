@@ -12,6 +12,8 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/OkHttp" />
             <option value="$PROJECT_DIR$/RetrofitNetwork" />
+            <option value="$PROJECT_DIR$/ThreadSync" />
+            <option value="$PROJECT_DIR$/Utils" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

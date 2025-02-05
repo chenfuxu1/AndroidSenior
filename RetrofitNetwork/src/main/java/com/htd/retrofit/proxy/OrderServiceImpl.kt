@@ -1,6 +1,7 @@
 package com.htd.retrofit.proxy
 
-import com.htd.retrofit.utils.Logit
+import com.htd.utils.Logit
+
 
 /**
  * Project: Android Senior
