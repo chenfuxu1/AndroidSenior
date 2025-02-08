@@ -2,12 +2,9 @@ package com.htd.threadsync;
 
 
 
-import android.icu.text.StringPrepParseException;
-
-import com.htd.utils.Logit;
+import com.htd.utils.Sout;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,7 +27,7 @@ public class Main {
         Thread thread = new Thread() {
             @Override
             public void run() {
-                Logit.INSTANCE.d(TAG, "cfx Thread started");
+                Sout.INSTANCE.d(TAG, "cfx Thread started");
             }
         };
         thread.start();
@@ -43,7 +40,7 @@ public class Main {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Logit.INSTANCE.d(TAG, "cfx Thread with runnable started!");
+                Sout.INSTANCE.d(TAG, "cfx Thread with runnable started!");
             }
         };
         Thread thread = new Thread(runnable);
@@ -66,7 +63,7 @@ public class Main {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Logit.INSTANCE.d(TAG, "cfx " + Thread.currentThread().getName() + " started!");
+                Sout.INSTANCE.d(TAG, "cfx " + Thread.currentThread().getName() + " started!");
             }
         };
 
@@ -84,7 +81,7 @@ public class Main {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Logit.INSTANCE.d(TAG, "cfx executor thread started!");
+                Sout.INSTANCE.d(TAG, "cfx executor thread started!");
             }
         };
 
@@ -149,7 +146,7 @@ public class Main {
                 try {
                     Thread.sleep(1500);
                 } catch (InterruptedException e) {
-                    Logit.INSTANCE.d(TAG, e.toString());
+                    Sout.INSTANCE.d(TAG, e.toString());
                 }
                 return "Done";
             }
@@ -159,11 +156,23 @@ public class Main {
         try {
             // 阻塞式的拿结果
             String result = future.get();
-            Logit.INSTANCE.d(TAG, "cfx result: " + result);
+            Sout.INSTANCE.d(TAG, "cfx result: " + result);
         } catch (Exception e) {
-            Logit.INSTANCE.d(TAG, e.toString());
+            Sout.INSTANCE.d(TAG, e.toString());
         }
 
         // 正确使用是放在循环中
+    }
+
+    static void runSynchronizedDemo1() {
+        new SynchronizedDemo1().runTest();
+    }
+
+    static void runSynchronizedDemo2() {
+        new SynchronizedDemo2().runTest();
+    }
+
+    static void runSynchronizedDemo3() {
+        new SynchronizedDemo3().runTest();
     }
 }

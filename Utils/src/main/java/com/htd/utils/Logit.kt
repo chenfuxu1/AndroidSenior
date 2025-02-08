@@ -1,5 +1,6 @@
 package com.htd.utils
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
@@ -15,16 +16,31 @@ object Logit {
 
     fun d(msg: Any) {
         val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
-        println("$formatStr\t${Thread.currentThread().name}\t${msg}")
+        Log.d("", "$formatStr\t${Thread.currentThread().name}\t${msg}")
     }
 
     fun d(tag: String, msg: Any) {
         val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
-        println("$formatStr\t$tag\t$msg")
+        Log.d(tag, "$formatStr\t${Thread.currentThread().name}\t${msg}")
     }
 
     fun d(tag: String, msg: Any, throwable: Throwable) {
         val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
-        println("$formatStr\t$tag\t$msg \n $throwable")
+        Log.d(tag, "$formatStr\t${Thread.currentThread().name}\t${msg}", throwable)
+    }
+
+    fun e(msg: Any) {
+        val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
+        Log.e("", "$formatStr\t${Thread.currentThread().name}\t${msg}")
+    }
+
+    fun e(tag: String, msg: Any) {
+        val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
+        Log.e(tag, "$formatStr\t${Thread.currentThread().name}\t${msg}")
+    }
+
+    fun e(tag: String, msg: Any, throwable: Throwable) {
+        val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
+        Log.e(tag, "$formatStr\t${Thread.currentThread().name}\t${msg}", throwable)
     }
 }

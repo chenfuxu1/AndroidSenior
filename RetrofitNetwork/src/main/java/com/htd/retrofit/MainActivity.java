@@ -10,10 +10,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.cfx.myapplication.R;
 import com.htd.utils.Logit;
+import com.htd.utils.Sout;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,19 +41,19 @@ public class MainActivity extends AppCompatActivity {
         repos.enqueue(new Callback<List<Repo>>() {
             @Override
             public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
-                Logit.INSTANCE.d(TAG, "htd Thread.currentThread().getName() " + Thread.currentThread().getName());
-                Logit.INSTANCE.d(TAG, "htd onResponse response: " + response.body());
+                Sout.INSTANCE.d(TAG, "htd Thread.currentThread().getName() " + Thread.currentThread().getName());
+                Sout.INSTANCE.d(TAG, "htd onResponse response: " + response.body());
             }
 
             @Override
             public void onFailure(Call<List<Repo>> call, Throwable throwable) {
-                Logit.INSTANCE.d(TAG, "htd throwable: " + throwable);
+                Sout.INSTANCE.d(TAG, "htd throwable: " + throwable);
             }
         });
 
         // rxjava
-        Observable<List<Repo>> octocat = githubService.listReposRx("octocat");
-        octocat.subscribe();
+        // Observable<List<Repo>> octocat = githubService.listReposRx("octocat");
+        // octocat.subscribe();
     }
 }
 

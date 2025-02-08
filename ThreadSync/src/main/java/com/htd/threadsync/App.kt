@@ -12,5 +12,7 @@ fun main() {
     // Main.runnable()
     // Main.threadFactory()
     // Main.executor()
-    Main.callable()
+    // Main.callable()
+    // Main.runSynchronizedDemo1()
+    Main.runSynchronizedDemo2()
 }

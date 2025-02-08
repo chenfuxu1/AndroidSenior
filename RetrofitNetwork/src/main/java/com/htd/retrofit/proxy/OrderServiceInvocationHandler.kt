@@ -1,6 +1,6 @@
 package com.htd.retrofit.proxy
 
-import com.htd.utils.Logit
+import com.htd.utils.Sout
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 
@@ -17,9 +17,9 @@ class OrderServiceInvocationHandler(private val target: Any) : InvocationHandler
     }
 
     override fun invoke(proxy: Any?, method: Method, args: Array<out Any>?): Any? {
-        Logit.d(TAG, "日志：准备创建订单... ")
+        Sout.d(TAG, "日志：准备创建订单... ")
         val result = method.invoke(target, *(args ?: emptyArray()))
-        Logit.d(TAG, "日志：订单创建成功！")
+        Sout.d(TAG, "日志：订单创建成功！")
         return result
     }
 }

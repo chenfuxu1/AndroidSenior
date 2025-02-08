@@ -1,6 +1,6 @@
 package com.htd.retrofit.proxy
 
-import com.htd.utils.Logit
+import com.htd.utils.Sout
 
 
 /**
@@ -16,6 +16,6 @@ class OrderServiceImpl : OrderService {
     }
 
     override fun createOrder() {
-        Logit.d(TAG, " 订单已创建！")
+        Sout.d(TAG, " 订单已创建！")
     }
 }

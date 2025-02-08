@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.cfx.okhttp.R
-import com.htd.utils.Logit
+import com.htd.utils.Sout
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     private fun testDns() {
         thread {
             val dns = InetAddress.getAllByName("hencoder.com")
-            Logit.d(TAG, "cfx dns: ${dns[0]}")
+            Sout.d(TAG, "cfx dns: ${dns[0]}")
             
         }
     }
@@ -50,11 +50,11 @@ class MainActivity : AppCompatActivity() {
         okHttpClient.newCall(request)
             .enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    Logit.d(TAG, "cfx onFailure e: $e")
+                    Sout.d(TAG, "cfx onFailure e: $e")
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                    Logit.d(TAG, "cfx onResponse response: ${response.body}")
+                    Sout.d(TAG, "cfx onResponse response: ${response.body}")
                 }
 
             })
