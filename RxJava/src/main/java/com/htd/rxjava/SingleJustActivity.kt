@@ -40,7 +40,8 @@ class SingleJustActivity : AppCompatActivity() {
 
         // singleJust()
         // singleMap()
-        cancelObservable()
+        // cancelObservable()
+        obervableMap()
     }
 
     private fun initView() {
@@ -343,17 +344,545 @@ class SingleJustActivity : AppCompatActivity() {
         //     })
     }
 
-
     private fun obervableMap() {
-        Observable.interval(0, 1, TimeUnit.SECONDS)
-            .map {
+        val single = Single.just(50)
+
+        // 整数 + 1
+        val addSingle = single.map(object : Function<Int, Int> {
+            override fun apply(t: Int): Int {
+                return t + 1
+            }
+        })
+
+        // 转字符
+        val strSingle = addSingle.map(object : Function<Int, String> {
+            override fun apply(t: Int): String {
+                return t.toString()
+            }
+        })
+
+        strSingle.subscribe(object : SingleObserver<String> {
+            override fun onSubscribe(d: Disposable) {
+            }
+
+            override fun onError(e: Throwable) {
 
             }
+
+            override fun onSuccess(t: String) {
+                rxTv.text = t
+            }
+
+        })
     }
 
-    private fun obervableDelay() {
-        // Observable.interval(0, 1, TimeUnit.SECONDS)
-        //     .delay()
+    /**
+     * Single#delay
+     * public final Single<T> delay(long time, @NonNull TimeUnit unit, @NonNull Scheduler scheduler, boolean delayError) {
+     *    Objects.requireNonNull(unit, "unit is null");
+     *    Objects.requireNonNull(scheduler, "scheduler is null");
+     *    return RxJavaPlugins.onAssembly(new SingleDelay<>(this, time, unit, scheduler, delayError));
+     * }
+     *
+     * SingleDelay
+     * public final class SingleDelay<T> extends Single<T> {
+     *
+     *     final SingleSource<? extends T> source;
+     *     final long time;
+     *     final TimeUnit unit;
+     *     final Scheduler scheduler;
+     *     final boolean delayError;
+     *
+     *     public SingleDelay(SingleSource<? extends T> source, long time, TimeUnit unit, Scheduler scheduler, boolean delayError) {
+     *         this.source = source;
+     *         this.time = time;
+     *         this.unit = unit;
+     *         this.scheduler = scheduler;
+     *         this.delayError = delayError;
+     *     }
+     *
+     *     @Override
+     *     protected void subscribeActual(final SingleObserver<? super T> observer) {
+     *
+     *         // 创建带延时的 Disposable
+     *         final SequentialDisposable sd = new SequentialDisposable();
+     *         // 下游的观察者接收观察
+     *         observer.onSubscribe(sd);
+     *         // 上游的订阅者进行订阅
+     *         source.subscribe(new Delay(sd, observer));
+     *     }
+     *
+     *     final class Delay implements SingleObserver<T> {
+     *         private final SequentialDisposable sd;
+     *         final SingleObserver<? super T> downstream;
+     *
+     *         Delay(SequentialDisposable sd, SingleObserver<? super T> observer) {
+     *             this.sd = sd;
+     *             this.downstream = observer;
+     *         }
+     *
+     *         @Override
+     *         public void onSubscribe(Disposable d) {
+     *             sd.replace(d);
+     *         }
+     *
+     *         @Override
+     *         public void onSuccess(final T value) {
+     *             sd.replace(scheduler.scheduleDirect(new OnSuccess(value), time, unit));
+     *         }
+     *
+     *         @Override
+     *         public void onError(final Throwable e) {
+     *             sd.replace(scheduler.scheduleDirect(new OnError(e), delayError ? time : 0, unit));
+     *         }
+     *
+     *         final class OnSuccess implements Runnable {
+     *             private final T value;
+     *
+     *             OnSuccess(T value) {
+     *                 this.value = value;
+     *             }
+     *
+     *             @Override
+     *             public void run() {
+     *                 downstream.onSuccess(value);
+     *             }
+     *         }
+     *
+     *         final class OnError implements Runnable {
+     *             private final Throwable e;
+     *
+     *             OnError(Throwable e) {
+     *                 this.e = e;
+     *             }
+     *
+     *             @Override
+     *             public void run() {
+     *                 downstream.onError(e);
+     *             }
+     *         }
+     *     }
+     * }
+     */
+    private fun singleDelay() {
+        val single = Single.just(50)
+        val delaySingle = single.delay(2, TimeUnit.SECONDS)
+
+    }
+
+    /**
+     * public final <R> Observable<R> map(@NonNull Function<? super T, ? extends R> mapper) {
+     *         Objects.requireNonNull(mapper, "mapper is null");
+     *         return RxJavaPlugins.onAssembly(new ObservableMap<>(this, mapper));
+     *     }
+     *
+     * public final class ObservableMap<T, U> extends AbstractObservableWithUpstream<T, U> {
+     *     final Function<? super T, ? extends U> function;
+     *
+     *     public ObservableMap(ObservableSource<T> source, Function<? super T, ? extends U> function) {
+     *         super(source);
+     *         this.function = function;
+     *     }
+     *
+     *     @Override
+     *     public void subscribeActual(Observer<? super U> t) {
+     *         source.subscribe(new MapObserver<T, U>(t, function));
+     *     }
+     *
+     *     static final class MapObserver<T, U> extends BasicFuseableObserver<T, U> {
+     *         final Function<? super T, ? extends U> mapper;
+     *
+     *         MapObserver(Observer<? super U> actual, Function<? super T, ? extends U> mapper) {
+     *             super(actual);
+     *             this.mapper = mapper;
+     *         }
+     *
+     *         @Override
+     *         public void onNext(T t) {
+     *             if (done) {
+     *                 return;
+     *             }
+     *
+     *             if (sourceMode != NONE) {
+     *                 downstream.onNext(null);
+     *                 return;
+     *             }
+     *
+     *             U v;
+     *
+     *             try {
+     *                 v = Objects.requireNonNull(mapper.apply(t), "The mapper function returned a null value.");
+     *             } catch (Throwable ex) {
+     *                 fail(ex);
+     *                 return;
+     *             }
+     *             downstream.onNext(v);
+     *         }
+     *
+     *         @Override
+     *         public int requestFusion(int mode) {
+     *             return transitiveBoundaryFusion(mode);
+     *         }
+     *
+     *         @Nullable
+     *         @Override
+     *         public U poll() throws Throwable {
+     *             T t = qd.poll();
+     *             return t != null ? Objects.requireNonNull(mapper.apply(t), "The mapper function returned a null value.") : null;
+     *         }
+     *     }
+     * }
+     *
+     * BasicFuseableObserver
+     *  public BasicFuseableObserver(Observer<? super R> downstream) {
+     *         this.downstream = downstream;
+     *     }
+     *
+     *     // final: fixed protocol steps to support fuseable and non-fuseable upstream
+     *     @SuppressWarnings("unchecked")
+     *     @Override
+     *     public final void onSubscribe(Disposable d) {
+     *         if (DisposableHelper.validate(this.upstream, d)) {
+     *
+     *             this.upstream = d;
+     *             if (d instanceof QueueDisposable) {
+     *                 this.qd = (QueueDisposable<T>)d;
+     *             }
+     *
+     *             if (beforeDownstream()) {
+     *
+     *                 downstream.onSubscribe(this);
+     *
+     *                 afterDownstream();
+     *             }
+     *
+     *         }
+     *     }
+     */
+    private fun observerMap() {
+        val observable: Observable<Long> = Observable.interval(0, 1, TimeUnit.SECONDS)
+        observable.map {  }
+    }
+
+    /**
+     * Observable
+     * public final Observable<T> delay(long time, @NonNull TimeUnit unit) {
+     *     return delay(time, unit, Schedulers.computation(), false);
+     * }
+     *
+     * public final Observable<T> delay(long time, @NonNull TimeUnit unit, @NonNull Scheduler scheduler, boolean delayError) {
+     *     Objects.requireNonNull(unit, "unit is null");
+     *     Objects.requireNonNull(scheduler, "scheduler is null");
+     *
+     *     return RxJavaPlugins.onAssembly(new ObservableDelay<>(this, time, unit, scheduler, delayError));
+     * }
+     *
+     * public final class ObservableDelay<T> extends AbstractObservableWithUpstream<T, T> {
+     *     final long delay;
+     *     final TimeUnit unit;
+     *     final Scheduler scheduler;
+     *     final boolean delayError;
+     *
+     *     public ObservableDelay(ObservableSource<T> source, long delay, TimeUnit unit, Scheduler scheduler, boolean delayError) {
+     *         super(source);
+     *         this.delay = delay;
+     *         this.unit = unit;
+     *         this.scheduler = scheduler;
+     *         this.delayError = delayError;
+     *     }
+     *
+     *     @Override
+     *     @SuppressWarnings("unchecked")
+     *     public void subscribeActual(Observer<? super T> t) {
+     *         Observer<T> observer;
+     *         if (delayError) {
+     *             observer = (Observer<T>)t;
+     *         } else {
+     *             observer = new SerializedObserver<>(t);
+     *         }
+     *
+     *         Scheduler.Worker w = scheduler.createWorker();
+     *
+     *         source.subscribe(new DelayObserver<>(observer, delay, unit, w, delayError));
+     *     }
+     *
+     *     static final class DelayObserver<T> implements Observer<T>, Disposable {
+     *         final Observer<? super T> downstream;
+     *         final long delay;
+     *         final TimeUnit unit;
+     *         final Scheduler.Worker w;
+     *         final boolean delayError;
+     *
+     *         Disposable upstream;
+     *
+     *         DelayObserver(Observer<? super T> actual, long delay, TimeUnit unit, Worker w, boolean delayError) {
+     *             super();
+     *             this.downstream = actual;
+     *             this.delay = delay;
+     *             this.unit = unit;
+     *             this.w = w;
+     *             this.delayError = delayError;
+     *         }
+     *
+     *         @Override
+     *         public void onSubscribe(Disposable d) {
+     *             if (DisposableHelper.validate(this.upstream, d)) {
+     *                 this.upstream = d;
+     *                 // 调用下游
+     *                 downstream.onSubscribe(this);
+     *             }
+     *         }
+     *
+     *         @Override
+     *         public void onNext(final T t) {
+     *             w.schedule(new OnNext(t), delay, unit);
+     *         }
+     *
+     *         @Override
+     *         public void onError(final Throwable t) {
+     *             w.schedule(new OnError(t), delayError ? delay : 0, unit);
+     *         }
+     *
+     *         @Override
+     *         public void onComplete() {
+     *             w.schedule(new OnComplete(), delay, unit);
+     *         }
+     *
+     *         @Override
+     *         public void dispose() {
+     *             // 1.上游取消
+     *             upstream.dispose();
+     *             // 2.调度器取消
+     *             w.dispose();
+     *         }
+     *
+     *         @Override
+     *         public boolean isDisposed() {
+     *             return w.isDisposed();
+     *         }
+     *
+     *         final class OnNext implements Runnable {
+     *             private final T t;
+     *
+     *             OnNext(T t) {
+     *                 this.t = t;
+     *             }
+     *
+     *             @Override
+     *             public void run() {
+     *                 downstream.onNext(t);
+     *             }
+     *         }
+     *
+     *         final class OnError implements Runnable {
+     *             private final Throwable throwable;
+     *
+     *             OnError(Throwable throwable) {
+     *                 this.throwable = throwable;
+     *             }
+     *
+     *             @Override
+     *             public void run() {
+     *                 try {
+     *                     downstream.onError(throwable);
+     *                 } finally {
+     *                     w.dispose();
+     *                 }
+     *             }
+     *         }
+     *
+     *         final class OnComplete implements Runnable {
+     *             @Override
+     *             public void run() {
+     *                 try {
+     *                     downstream.onComplete();
+     *                 } finally {
+     *                     w.dispose();
+     *                 }
+     *             }
+     *         }
+     *     }
+     * }
+     */
+    private fun observerDelay() {
+        val observable: Observable<Long> = Observable.interval(0, 1, TimeUnit.SECONDS)
+        observable.delay(2, TimeUnit.SECONDS)
+    }
+
+    /**
+     * 线程切换
+     * public final Single<T> subscribeOn(@NonNull Scheduler scheduler) {
+     *     Objects.requireNonNull(scheduler, "scheduler is null");
+     *     // this：上游，scheduler：传入的调度器
+     *     return RxJavaPlugins.onAssembly(new SingleSubscribeOn<>(this, scheduler));
+     * }
+     *
+     * public final class SingleSubscribeOn<T> extends Single<T> {
+     *     final SingleSource<? extends T> source; // 上游
+     *
+     *     final Scheduler scheduler; // 传入的调度器
+     *
+     *     public SingleSubscribeOn(SingleSource<? extends T> source, Scheduler scheduler) {
+     *         this.source = source; // 上游
+     *         this.scheduler = scheduler; // 传入的调度器
+     *     }
+     *
+     *     @Override
+     *     protected void subscribeActual(final SingleObserver<? super T> observer) {
+     *         // observer: 下游的观察者，source：上游
+     *         final SubscribeOnObserver<T> parent = new SubscribeOnObserver<>(observer, source);
+     *         observer.onSubscribe(parent);
+     *         // 完成线程的切换，我们先看看 parent 的 run 方法
+     *         Disposable f = scheduler.scheduleDirect(parent);
+     *
+     *         parent.task.replace(f);
+     *
+     *     }
+     *
+     *     // 作用：1.作为内部的 runnable 作为线程切换后的订阅操作 2.作为 disposable 完成任务的取消
+     *     static final class SubscribeOnObserver<T>
+     *     extends AtomicReference<Disposable>
+     *     implements SingleObserver<T>, Disposable, Runnable {
+     *
+     *         private static final long serialVersionUID = 7000911171163930287L;
+     *
+     *         final SingleObserver<? super T> downstream;
+     *
+     *         final SequentialDisposable task;
+     *
+     *         final SingleSource<? extends T> source;
+     *
+     *         SubscribeOnObserver(SingleObserver<? super T> actual, SingleSource<? extends T> source) {
+     *             this.downstream = actual;
+     *             this.source = source;
+     *             this.task = new SequentialDisposable();
+     *         }
+     *
+     *         @Override
+     *         public void onSubscribe(Disposable d) {
+     *             // 上传进来的 disposable，作为内部的 disposable
+     *             DisposableHelper.setOnce(this, d);
+     *         }
+     *
+     *         @Override
+     *         public void onSuccess(T value) {
+     *             downstream.onSuccess(value);
+     *         }
+     *
+     *         @Override
+     *         public void onError(Throwable e) {
+     *             downstream.onError(e);
+     *         }
+     *
+     *         @Override
+     *         public void dispose() {
+     *             // 取消内部的 disposable
+     *             DisposableHelper.dispose(this);
+     *             task.dispose();
+     *         }
+     *
+     *         @Override
+     *         public boolean isDisposed() {
+     *             return DisposableHelper.isDisposed(get());
+     *         }
+     *
+     *         @Override
+     *         public void run() {
+     *             // 调用上游的 subscribe 订阅，上游就完成线程的切换，所以上游往下传递的都是切完线程后的效果
+     *             source.subscribe(this);
+     *         }
+     *     }
+     *
+     * }
+     *
+     * Single#observeOn
+     * public final Single<T> observeOn(@NonNull Scheduler scheduler) {
+     *     Objects.requireNonNull(scheduler, "scheduler is null");
+     *     return RxJavaPlugins.onAssembly(new SingleObserveOn<>(this, scheduler));
+     * }
+     *
+     * public final class SingleObserveOn<T> extends Single<T> {
+     *
+     *     final SingleSource<T> source;
+     *
+     *     final Scheduler scheduler;
+     *
+     *     public SingleObserveOn(SingleSource<T> source, Scheduler scheduler) {
+     *         this.source = source;
+     *         this.scheduler = scheduler;
+     *     }
+     *
+     *     @Override
+     *     protected void subscribeActual(final SingleObserver<? super T> observer) {
+     *         source.subscribe(new ObserveOnSingleObserver<>(observer, scheduler));
+     *     }
+     *
+     *     static final class ObserveOnSingleObserver<T> extends AtomicReference<Disposable>
+     *     implements SingleObserver<T>, Disposable, Runnable {
+     *         private static final long serialVersionUID = 3528003840217436037L;
+     *
+     *         final SingleObserver<? super T> downstream;
+     *
+     *         final Scheduler scheduler;
+     *
+     *         T value;
+     *         Throwable error;
+     *
+     *         ObserveOnSingleObserver(SingleObserver<? super T> actual, Scheduler scheduler) {
+     *             this.downstream = actual;
+     *             this.scheduler = scheduler;
+     *         }
+     *
+     *         @Override
+     *         public void onSubscribe(Disposable d) {
+     *             if (DisposableHelper.setOnce(this, d)) {
+     *                 downstream.onSubscribe(this);
+     *             }
+     *         }
+     *
+     *         @Override
+     *         public void onSuccess(T value) {
+     *             this.value = value;
+     *             // 成功时切换线程
+     *             Disposable d = scheduler.scheduleDirect(this);
+     *             DisposableHelper.replace(this, d);
+     *         }
+     *
+     *         @Override
+     *         public void onError(Throwable e) {
+     *             this.error = e;
+     *             // 失败时切换线程
+     *             Disposable d = scheduler.scheduleDirect(this);
+     *             DisposableHelper.replace(this, d);
+     *         }
+     *
+     *         @Override
+     *         public void run() {
+     *             Throwable ex = error;
+     *             if (ex != null) {
+     *                 downstream.onError(ex);
+     *             } else {
+     *                 downstream.onSuccess(value);
+     *             }
+     *         }
+     *
+     *         @Override
+     *         public void dispose() {
+     *             DisposableHelper.dispose(this);
+     *         }
+     *
+     *         @Override
+     *         public boolean isDisposed() {
+     *             return DisposableHelper.isDisposed(get());
+     *         }
+     *     }
+     * }
+     */
+    private fun threadTransform() {
+        Single.just(1)
+            .subscribeOn(Schedulers.io())
+            // .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun onDestroy() {
