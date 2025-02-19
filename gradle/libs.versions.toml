@@ -16,9 +16,11 @@ okhttp = "4.12.0"
 retrofit = "2.11.0"
 rxjava = "3.0.0"
 rxjava3RetrofitAdapter = "3.0.0-RC8"
+squareupOkio = "2.4.3"
 
 [libraries]
 adapter-rxjava2 = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "adapterRxjava2" }
+com-squareup-okio-okio = { module = "com.squareup.okio:okio", version.ref = "squareupOkio" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 google-gson = { module = "com.google.code.gson:gson", version.ref = "gsonVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

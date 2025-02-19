@@ -45,4 +45,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // okio
+    implementation(libs.com.squareup.okio.okio)
+
+    // 添加工具类模块
+    implementation(project(":Utils"))
+
 }

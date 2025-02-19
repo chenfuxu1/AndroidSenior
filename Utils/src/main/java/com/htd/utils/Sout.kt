@@ -21,7 +21,7 @@ object Sout {
 
     fun d(tag: String, msg: Any) {
         val formatStr = simpleDateFormat.format(Calendar.getInstance().time)
-        println("$formatStr\t${Thread.currentThread().name}\t${msg}")
+        println("$formatStr\t$tag\t${Thread.currentThread().name}\t${msg}")
     }
 
     fun d(tag: String, msg: Any, throwable: Throwable) {
