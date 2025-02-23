@@ -4,6 +4,17 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/buildSrc" name="buildSrc">
+                <projects>
+                  <project path="$PROJECT_DIR$/buildSrc" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="testRunner" value="CHOOSE_PER_TEST" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
@@ -11,6 +22,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/GradleBuild" />
+            <option value="$PROJECT_DIR$/GradlePlugin" />
             <option value="$PROJECT_DIR$/IO" />
             <option value="$PROJECT_DIR$/OkHttp" />
             <option value="$PROJECT_DIR$/RetrofitNetwork" />
@@ -19,6 +31,7 @@
             <option value="$PROJECT_DIR$/ThreadCommunication" />
             <option value="$PROJECT_DIR$/ThreadSync" />
             <option value="$PROJECT_DIR$/Utils" />
+            <option value="$PROJECT_DIR$/buildSrc" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
