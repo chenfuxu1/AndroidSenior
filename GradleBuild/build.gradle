@@ -1,0 +1,88 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.cfx.gradlebuild'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.cfx.gradlebuild"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // 打包的类型
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.activity
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
+
+println(rootProject.buildDir) // D:\F\GitProgram\AndroidSenior\build
+task cleanB() {
+    // 配置阶段
+    println(1)
+    delete(rootProject.buildDir)
+    println(2)
+
+    // 执行阶段
+    doFirst {
+        // 执行 cleanB 完成之后，才会执行
+        println("doFirst task cleanB")
+    }
+
+    // 执行阶段
+    doLast {
+        // 执行 cleanB 完成之后，才会执行
+        println("finish task cleanB")
+    }
+}
+
+void bump() {
+    def versionPropsFile = file('version.properties')
+    def versionProps = new Properties()
+    versionProps.load(new FileInputStream(versionPropsFile))
+    def codeBumped = Integer.valueOf(versionProps['VERSION_CODE']) + 1
+    versionProps['VERSION_CODE'] = codeBumped.toString()
+    versionProps.store(versionPropsFile.newWriter(), null)
+    println(codeBumped)
+}
+
+task bumpVersion() {
+    doFirst {
+        bump()
+    }
+}
+
+task bumpVersionAndNotify() {
+    doFirst {
+        bump()
+    }
+
+    doLast {
+        println("通知更新完成")
+    }
+}

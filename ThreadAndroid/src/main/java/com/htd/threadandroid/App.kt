@@ -13,9 +13,9 @@ fun main() {
     val customThread = CustomThread()
     customThread.start()
     Thread.sleep(3000)
-    customThread.setTask {
-        Sout.d("cfx 荒天帝...")
-    }
-    customThread.quit()
+    // customThread.setTask {
+    //     Sout.d("cfx 荒天帝...")
+    // }
+    // customThread.quit()
     Sout.d("cfx 退出...")
 }

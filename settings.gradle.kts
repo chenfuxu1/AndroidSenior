@@ -20,6 +20,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Android Senior"
+// 包含的项目结构
 include(":RetrofitNetwork")
 include(":OkHttp")
 include(":ThreadSync")
@@ -28,3 +29,4 @@ include(":ThreadCommunication")
 include(":ThreadAndroid")
 include(":RxJava")
 include(":IO")
+include(":GradleBuild")
