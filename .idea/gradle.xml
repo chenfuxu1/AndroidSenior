@@ -21,6 +21,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/APT" />
+            <option value="$PROJECT_DIR$/Generics" />
             <option value="$PROJECT_DIR$/GradleBuild" />
             <option value="$PROJECT_DIR$/GradlePlugin" />
             <option value="$PROJECT_DIR$/IO" />
