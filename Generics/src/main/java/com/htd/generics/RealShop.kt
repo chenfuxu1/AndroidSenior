@@ -1,6 +1,6 @@
 package com.htd.generics
 
-import com.htd.generics.bean.Apple
+import com.htd.generics.fruit.Apple
 
 /**
  * Project: Android Senior

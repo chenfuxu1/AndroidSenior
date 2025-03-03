@@ -1,4 +1,4 @@
-package com.htd.generics.bean
+package com.htd.generics.fruit
 
 /**
  * Project: Android Senior
@@ -6,4 +6,4 @@ package com.htd.generics.bean
  * DateTime: 2025-03-02 16:09
  *
  **/
-data class Banana(val name: String)
+data class Banana(val name: String) : Fruit
